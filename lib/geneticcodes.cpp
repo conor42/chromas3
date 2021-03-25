@@ -57,7 +57,7 @@ GeneticCodes::CodonTable::CodonTable(const char* line)
 	name.assign(line, i);
 	p = SkipSpaces(p + 1);
 	std::array<Codon, CODON_COUNT> codons;
-	for (i = 0; i < CODON_COUNT; i++) {
+	for (i = 0; i < CODON_COUNT; ++i) {
 		char aa = LookupTables::Uppercase(p[i]);
 		if (aa != '*' && (aa < 'A' || aa > 'Z'))
 			return;
@@ -66,7 +66,7 @@ GeneticCodes::CodonTable::CodonTable(const char* line)
 	p = strchr(p, ' ');
 	if (p) {
 		p = SkipSpaces(p);
-		for (i = 0; i < 64; i++) {
+		for (i = 0; i < 64; ++i) {
 			char c = LookupTables::Uppercase(p[i]);
 			if (c != '-' && c != 'M')
 				break;

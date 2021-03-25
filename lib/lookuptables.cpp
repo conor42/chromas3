@@ -47,7 +47,7 @@ void LookupTables::Initialize()
 		"Y:CT"
 	};
 
-	for (int i = 0; i < uppercase.size(); i++) {
+	for (int i = 0; i < uppercase.size(); ++i) {
 		uppercase[i] = char(std::toupper(i));
 		lowercase[i] = char(std::tolower(i));
 	}
