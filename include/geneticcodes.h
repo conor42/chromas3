@@ -96,47 +96,46 @@ public:
 	};
 
 	static Iterator cbegin() {
-		return Iterator(codon_tables_.cbegin());
+		return Iterator(impl_.codon_tables.cbegin());
 	}
 
 	static Iterator cend() {
-		return Iterator(codon_tables_.cend());
+		return Iterator(impl_.codon_tables.cend());
 	}
 
 	static int Search(const char* name);
 
 	static Codon TranslateForward(const char* sequence, size_t pos, size_t length, size_t genetic_code)	{
-		assert(genetic_code < codon_tables_.size());
+		assert(genetic_code < impl_.codon_tables.size());
 
-		if (genetic_code >= codon_tables_.size())
+		if (genetic_code >= impl_.codon_tables.size() || pos + 3 > length)
 			return { AA_UNKNOWN, false };
 
 		unsigned int i = LookupTables::BaseFlags(sequence[pos + 2])
 			+ (LookupTables::BaseFlags(sequence[pos + 1]) << 4)
 			+ (LookupTables::BaseFlags(sequence[pos]) << 8);
-		return codon_tables_[genetic_code].table[i];
+		return impl_.codon_tables[genetic_code].table[i];
 	}
 
 	static Codon TranslateReverseComplement(const char* sequence, size_t pos, size_t length, size_t genetic_code) {
-		assert(genetic_code < codon_tables_.size());
+		assert(genetic_code < impl_.codon_tables.size());
 
-		if (genetic_code >= codon_tables_.size())
+		if (genetic_code >= impl_.codon_tables.size() || pos + 3 > length)
 			return { AA_UNKNOWN, false };
 
 		unsigned int i = LookupTables::BaseFlagsComplement(sequence[pos])
 			+ (LookupTables::BaseFlagsComplement(sequence[pos + 1]) << 4)
 			+ (LookupTables::BaseFlagsComplement(sequence[pos + 2]) << 8);
-		return codon_tables_[genetic_code].table[i];
+		return impl_.codon_tables[genetic_code].table[i];
 	}
 
 private:
-	static class static_initializer
+	static struct static_initializer
 	{
-	public:
 		static_initializer() { Initialize(); }
-	} initializer_;
+		// If the vector was a static member of GeneticCodes it could be constructed after this object.
+		std::vector<CodonTable> codon_tables;
+	} impl_;
 
 	static void Initialize();
-
-	static std::vector<CodonTable> codon_tables_;
 };

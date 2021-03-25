@@ -24,9 +24,8 @@
 #include "strutil.h"
 #include "system.h"
 
-GeneticCodes::static_initializer GeneticCodes::initializer_;
+GeneticCodes::static_initializer GeneticCodes::impl_;
 static const char standard_code[] = "Standard; FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG ---M---------------M---------------M";
-std::vector<GeneticCodes::CodonTable> GeneticCodes::codon_tables_;
 
 static const size_t CODON_COUNT = 64;
 
@@ -102,8 +101,8 @@ GeneticCodes::CodonTable::CodonTable(const char* line)
 
 int GeneticCodes::Search(const char* name)
 {
-    for (size_t i = 0; i < codon_tables_.size(); ++i)
-        if (codon_tables_[i].name.compare(name) == 0)
+    for (size_t i = 0; i < impl_.codon_tables.size(); ++i)
+        if (impl_.codon_tables[i].name.compare(name) == 0)
             return (int)i;
     return -1;
 }
@@ -116,7 +115,7 @@ void GeneticCodes::Initialize()
     std::ifstream stream(path);
     if (stream.fail()) {
         std::cerr << "Genetic code file not found; loading standard code only." << std::endl;
-		codon_tables_.emplace_back(standard_code);
+		impl_.codon_tables.emplace_back(standard_code);
         return;
     }
 
@@ -124,12 +123,12 @@ void GeneticCodes::Initialize()
         std::string line;
         std::getline(stream, line);
         if (stream.fail()) {
-            std::cerr << "Error reading genetic code file; only " << codon_tables_.size() << " table(s) loaded." << std::endl;
+            std::cerr << "Error reading genetic code file; only " << impl_.codon_tables.size() << " table(s) loaded." << std::endl;
             break;
         }
-		codon_tables_.emplace_back(line.c_str());
+		impl_.codon_tables.emplace_back(line.c_str());
     } while (!stream.eof());
 
-    if (codon_tables_.empty())
-		codon_tables_.emplace_back(standard_code);
+    if (impl_.codon_tables.empty())
+		impl_.codon_tables.emplace_back(standard_code);
 }
