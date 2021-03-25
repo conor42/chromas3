@@ -77,9 +77,11 @@ GeneticCodes::CodonTable::CodonTable(const char* line)
 	for (size_t i = 0; i < TABLE_SIZE; ++i) {
 		unsigned int aa_flags = 0;
 		size_t aa_index = 0;
+		bool can_start = true;
 		for (size_t j = 0; j < 64; ++j) {
 			if (CodonIndexMatch(j, i)) {
 				aa_flags |= 1 << LookupTables::CharIndex(codons[j].amino_acid);
+				can_start &= codons[j].can_start;
 				aa_index = j;
 			}
 		}
@@ -88,16 +90,14 @@ GeneticCodes::CodonTable::CodonTable(const char* line)
 		}
 		else if (aa_flags == ((1 << LookupTables::CharIndex('D')) | (1 << LookupTables::CharIndex('N')))) {
 			table[i].amino_acid = AA_D_OR_N;
-			table[i].can_start = false;
 		}
 		else if (aa_flags == ((1 << LookupTables::CharIndex('E')) | (1 << LookupTables::CharIndex('Q')))) {
 			table[i].amino_acid = AA_E_OR_Q;
-			table[i].can_start = false;
 		}
 		else {
 			table[i].amino_acid = AA_UNKNOWN;
-			table[i].can_start = false;
 		}
+		table[i].can_start = can_start;
 	}
 }
 
