@@ -22,7 +22,7 @@
 
 const char System::data_dir_name[] = "libchromas";
 
-static size_t WideCharToMultiByte(const wchar_t* src, std::string dst)
+static size_t WideCharToMultiByte(const wchar_t* src, std::string& dst)
 {
 	int src_len = (int)wcslen(src);
 	int dst_len = WideCharToMultiByte(CP_UTF8, 0, src, src_len, nullptr, 0, nullptr, nullptr);
@@ -52,7 +52,7 @@ std::string System::ProgramDataDir()
 
 void System::AppendName(std::string& path, const char* name)
 {
-    if (path.back() != '\\' && path.back() != '/')
+    if (path.empty() || ( path.back() != '\\' && path.back() != '/'))
         path.push_back('\\');
     path.append(name);
 }
