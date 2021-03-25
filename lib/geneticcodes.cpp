@@ -71,6 +71,8 @@ GeneticCodes::CodonTable::CodonTable(const char* line)
 				break;
 			codons[i].can_start = (c == 'M');
 		}
+		for (; i < 64; ++i)
+			codons[i].can_start = false;
 	}
 	for (size_t i = 0; i < TABLE_SIZE; ++i) {
 		unsigned int aa_flags = 0;
