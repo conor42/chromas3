@@ -92,3 +92,39 @@ T read_bigendian(const char* src, size_t size)
     for (size_t i = 1; i < size; ++i)
         value = (value << 8) + uint8_t(src[i]);
     return value;
+}
+
+template<typename T>
+class BigEndian16
+{
+public:
+    BigEndian16& operator=(T v) {
+        value = system_endian(v);
+        return *this;
+    }
+    operator T() const {
+        return system_endian(value);
+    }
+private:
+    T value;
+};
+
+typedef BigEndian16<uint16_t> BigEndianU16;
+typedef BigEndian16<int16_t> BigEndianS16;
+
+template<typename T>
+class BigEndian32
+{
+public:
+    BigEndian32& operator=(T v) {
+        value = system_endian(v);
+        return *this;
+    }
+    operator T() const {
+        return system_endian(value);
+    }
+private:
+    T value;
+};
+
+typedef BigEndian32<uint32_t> BigEndianU32;
