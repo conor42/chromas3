@@ -88,16 +88,7 @@ inline unsigned int system_endian(int val)
 template<typename T>
 T read_bigendian(const char* src, size_t size)
 {
-#ifndef BIG_ENDIAN
-    ptrdiff_t i = size - 1;
-    T value = src[i];
-    for (--i; i >= 0; --i)
-        value = (value << 8) | src[i];
-    return value;
-#else
     T value = src[0];
     for (size_t i = 1; i < size; ++i)
         value = (value << 8) + src[i];
     return value;
-#endif
-}
