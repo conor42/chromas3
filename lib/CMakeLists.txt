@@ -9,7 +9,7 @@ endif()
 
 file(GLOB HEADER_LIST CONFIGURE_DEPENDS "../include/*.h")
 
-add_library (libchromas "lookuptables.cpp" "geneticcodes.cpp" "ab1file.cpp" "exception.cpp" "log.cpp" "sequence.cpp" ${SYSTEM_CPP_SOURCE} ${HEADER_LIST})
+add_library (libchromas "lookuptables.cpp" "geneticcodes.cpp" "ab1file.cpp" "exception.cpp" "log.cpp" "sequence.cpp" "scffile.cpp" ${SYSTEM_CPP_SOURCE} ${HEADER_LIST})
 
 target_include_directories (libchromas PUBLIC "../include")
 
