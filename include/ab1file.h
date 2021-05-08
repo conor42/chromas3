@@ -35,7 +35,7 @@ public:
     public:
         Iterator() : element_(nullptr), size_(0) {}
 
-        Iterator(const char* data, size_t size_) : element_(data), size_(size_) {}
+        Iterator(const char* data, size_t size) : element_(data), size_(size) {}
 
         Iterator(const Iterator& rval) : element_(rval.element_), size_(rval.size_) {}
 
