@@ -33,3 +33,18 @@ const char* invalid_file_format::what() const noexcept
 {
     return what_arg_;
 }
+
+unsupported_file_format::unsupported_file_format(const std::string& what_arg)
+    : what_arg_(what_arg.c_str())
+{
+}
+
+unsupported_file_format::unsupported_file_format(const char* what_arg)
+    : what_arg_(what_arg)
+{
+}
+
+const char* unsupported_file_format::what() const noexcept
+{
+    return what_arg_;
+}

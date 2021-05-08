@@ -31,3 +31,13 @@ public:
 private:
     const char* what_arg_;
 };
+
+class unsupported_file_format : public std::exception {
+public:
+    explicit unsupported_file_format(const std::string& what_arg);
+    explicit unsupported_file_format(const char* what_arg);
+    virtual const char* what() const noexcept;
+
+private:
+    const char* what_arg_;
+};
