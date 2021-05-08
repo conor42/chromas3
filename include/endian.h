@@ -90,5 +90,5 @@ T read_bigendian(const char* src, size_t size)
 {
     T value = src[0];
     for (size_t i = 1; i < size; ++i)
-        value = (value << 8) + src[i];
+        value = (value << 8) + uint8_t(src[i]);
     return value;
