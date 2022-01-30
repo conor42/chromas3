@@ -18,6 +18,8 @@
 // along with Chromas 3. If not, see < https://www.gnu.org/licenses/>.
 
 #include "sequence.h"
+#include "align.h"
+#include "geneticcodes.h"
 
 NucleotideSequence::NucleotideSequence()
 {
@@ -189,6 +191,32 @@ size_t NucleotideSequence::SearchSequenceBackward(size_t start_pos, const std::s
 		if (MatchSequence(i, query, both_strands))
 			return i;
 	return NOT_FOUND;
+}
+
+size_t NucleotideSequence::SearchByAlignmentFwd(size_t start_pos, const std::string& query, int min_percent) const
+{
+	Alignment::Result result;
+	if (Alignment::Search(*this, start_pos, Length(), Length(), query.c_str(), min_percent, &result))
+		return result.start;
+	return (size_t)-1;
+}
+
+size_t NucleotideSequence::SearchByAlignmentBack(size_t start_pos, const std::string& query, int min_percent) const
+{
+	Alignment::Result result;
+	if (Alignment::Search(*this, 0, Length(), start_pos, query.c_str(), min_percent, &result))
+		return result.start;
+	return (size_t)-1;
+}
+
+bool NucleotideSequence::MatchTranslation(size_t pos, const base_type* query, int genetic_code) const
+{
+	for (; *query; ++query, pos += 3) {
+		GeneticCodes::Codon c = GeneticCodes::TranslateForward(cbegin(), pos, Length(), genetic_code);
+		if (!LookupTables::AminoAcidMatch(c.amino_acid, *query))
+			return false;
+	}
+	return true;
 }
 
 size_t NucleotideSequence::FindNextN(size_t start_pos) const

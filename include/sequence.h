@@ -156,9 +156,9 @@ public:
 
 	size_t SearchSequenceBackward(size_t start_pos, const std::string& query, bool both_strands) const;
 
-	size_t SearchByAlignmentFwd(const std::string& query) const;
+	size_t SearchByAlignmentFwd(size_t start_pos, const std::string& query, int min_percent) const;
 
-	size_t SearchByAlignmentRev(size_t start_pos, const std::string& query) const;
+	size_t SearchByAlignmentBack(size_t start_pos, const std::string& query, int min_percent) const;
 
 	size_t FindInTranslation(size_t start_pos, bool backwards, const std::string& query, int genetic_code) const;
 
