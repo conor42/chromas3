@@ -25,6 +25,10 @@
 class LookupTables
 {
 public:
+	static const size_t IUPAC_UNDEFINED_INDEX = 15;
+
+	static const std::array<const std::string, 15> iupac_codes;
+
 	static inline char Uppercase(char base) {
 		return uppercase[(unsigned char)base];
 	}
@@ -35,6 +39,10 @@ public:
 
 	static inline uint8_t CharIndex(char base) {
 		return char_index[(unsigned char)base];
+	}
+
+	static inline uint8_t IupacIndex(char base) {
+		return iupac_index[(unsigned char)base];
 	}
 
 	static inline char Complement(char base) {
@@ -64,6 +72,7 @@ private:
 
 	static std::array<char, 256> uppercase, lowercase;
 	static std::array<uint8_t, 256> char_index;
+	static std::array<uint8_t, 256> iupac_index;
 	static std::array<char, 256> complement;
 	static std::array<uint8_t, 256> base_flags;
 };
