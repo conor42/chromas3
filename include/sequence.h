@@ -200,6 +200,10 @@ private:
 
 	bool MatchTranslation(size_t pos, const base_type* query, int genetic_code) const;
 
+	base_type UppercaseBase(size_t i) const {
+		return LookupTables::Uppercase(sequence_[i]);
+	}
+
 	Description description_;
 	SeqContainer<base_type> sequence_;
 	SeqContainer<quality_type> quality_;
