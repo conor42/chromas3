@@ -99,6 +99,10 @@ public:
 		return sequence_.Length() == 0;
 	}
 
+	base_type operator[](size_t pos) const {
+		return sequence_[pos];
+	}
+
 	const base_type* cbegin() const {
 		return sequence_.cbegin();
 	}
@@ -174,7 +178,6 @@ private:
 	bool MatchSequence(size_t pos, const std::string& query, bool both_strands) const;
 
 	bool MatchForward(size_t pos, const base_type* query, size_t length) const {
-		auto seq = sequence_.cbegin();
 		for (size_t i = 0; i < length; ++pos, ++i) {
 			if (!LookupTables::BaseMatch(sequence_[pos], query[i]))
 				return false;
@@ -183,7 +186,6 @@ private:
 	}
 
 	bool MatchReverse(size_t pos, const base_type* query, size_t length) const {
-		auto seq = sequence_.cbegin();
 		for (ptrdiff_t i = length - 1; i >= 0; ++pos, --i) {
 			if (!LookupTables::BaseMatch(sequence_[pos], LookupTables::Complement(query[i])))
 				return false;
