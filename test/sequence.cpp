@@ -20,6 +20,7 @@
 #include "catch_amalgamated.hpp"
 #include "sequence.h"
 #include "ab1file.h"
+#include "scffile.h"
 
 template<typename T>
 static int elemcmp(const T* first, const void* second, size_t count)
@@ -162,4 +163,20 @@ TEST_CASE("ab1 constructor", "[ab1_load]")
     time_t datetime;
     REQUIRE(ab1file.DateTime("RUND", "RUNT", 1, datetime) == Ab1File::SearchResult::SUCCESS);
     REQUIRE(ab1file.DateTime("RUND", "RUNT", 2, datetime) == Ab1File::SearchResult::SUCCESS);
+}
+
+TEST_CASE("scf constructor", "[scf_load]")
+{
+    ScfFile scffile("test.scf");
+    ScfFile::TraceIterator<int32_t> trace_begin[4], trace_end[4];
+    for (int32_t i = 0; i < 4; ++i) {
+        REQUIRE(scffile.Traces("ACGT"[i], trace_begin[i], trace_end[i]));
+    }
+    int32_t buffer[16384];
+    for (int32_t i = 0; i < 4; ++i) {
+        ScfFile::TraceIterator<int32_t> end = trace_end[i];
+        size_t j = 0;
+        for (ScfFile::TraceIterator<int32_t> it = trace_begin[i]; it != end; ++it)
+            buffer[j++] = *it;
+    }
 }
