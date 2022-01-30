@@ -180,3 +180,10 @@ TEST_CASE("scf constructor", "[scf_load]")
             buffer[j++] = *it;
     }
 }
+
+TEST_CASE("search by alignment", "[align_search]")
+{
+    NucleotideSequence sequence("ACGATCAGACTGCGAAGATTCCATACAGCG");
+    REQUIRE(sequence.SearchByAlignmentFwd(0, "CAGACAGCG", 80) == 5);
+    REQUIRE(sequence.SearchByAlignmentBack(sequence.Length() - 1, "CAGACAGCG", 80) == 21);
+}
