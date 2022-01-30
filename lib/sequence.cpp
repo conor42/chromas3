@@ -24,7 +24,7 @@ NucleotideSequence::NucleotideSequence()
 }
 
 NucleotideSequence::NucleotideSequence(const base_type* seq, size_t length, const char* name)
-	: sequence_(seq, length)
+	: sequence_(seq, (length == (size_t)-1) ? strlen(seq) : length)
 {
 	SetName(name);
 }

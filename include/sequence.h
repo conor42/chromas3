@@ -53,7 +53,7 @@ public:
 
 	NucleotideSequence();
 
-	NucleotideSequence(const base_type* sequence, size_t length, const char* name = nullptr);
+	NucleotideSequence(const base_type* sequence, size_t length = (size_t)-1, const char* name = nullptr);
 
 	template<class BaseIterator, class QualityIterator>
 	NucleotideSequence(BaseIterator begin_base, BaseIterator end_base, QualityIterator begin_qual, QualityIterator end_qual, const char* name = nullptr)
