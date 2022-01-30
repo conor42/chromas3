@@ -28,6 +28,7 @@ class NucleotideSequence
 public:
 	static const size_t NOT_FOUND = (size_t)-1;
 	static const size_t TRACE_COUNT = 4;
+	static const uint8_t DEFAULT_BASE_QUALITY = 40;
 
 	using base_type = char;
 	using quality_type = uint8_t;
@@ -132,6 +133,10 @@ public:
 	}
 
 	bool HasValidQuality() const;
+
+	quality_type QualityOrDefault(size_t pos) const {
+		return quality_[pos] > 1 ? quality_[pos] : DEFAULT_BASE_QUALITY;
+	}
 
 	BaseCounts ComputeBaseCounts() const;
 
