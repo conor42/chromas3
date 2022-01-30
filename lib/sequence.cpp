@@ -212,3 +212,99 @@ bool NucleotideSequence::IsRedundant(size_t pos) const
 	auto flags = LookupTables::BaseFlags(sequence_[pos]);
 	return (flags & (flags - 1)) != 0;
 }
+
+size_t NucleotideSequence::ComputeQualityStart(unsigned int window, int quality) const
+{
+	if (Length() > window) {
+		unsigned int q = 0;
+		unsigned int min_q = window * quality;
+		size_t i = 0;
+		unsigned int zeros = 0;
+		for (; i < window; ++i) {
+			if (quality_[i] < 2 && UppercaseBase(i) != 'N')
+				++zeros;
+			q += quality_[i];
+		}
+		for (; i < Length(); ++i) 		{
+			if (q >= min_q)
+				break;
+			if (quality_[i] < 2 && UppercaseBase(i) != 'N')
+				++zeros;
+			if (quality_[i - window] < 2 && UppercaseBase(i - window) != 'N')
+				--zeros;
+			if (zeros > (window >> 1)) // Quality data may not be set at all
+				break;
+			q += quality_[i] - quality_[i - window];
+		}
+		i -= window;
+		for (; i < Length(); ++i) {
+			if (quality_[i] < 2 && UppercaseBase(i) != 'N')
+				break;
+			if ((int)quality_[i] >= quality)
+				break;
+		}
+		if (i > 0 || quality_[0] > 1)
+			return i;
+	}
+	else if (Length()) {
+		size_t i;
+		for (i = 0; i < Length(); ++i) {
+			if (quality_[i] < 2 && UppercaseBase(i) != 'N')
+				break;
+			if ((int)quality_[i] >= quality)
+				break;
+		}
+		if (i > 0 || quality_[0] > 1)
+			return i;
+	}
+	return -1;
+
+}
+
+size_t NucleotideSequence::ComputeQualityEnd(size_t start_pos, unsigned int window, int quality) const
+{
+	size_t lLast = Length() - 1;
+	if (Length() - start_pos > window) {
+		unsigned int q = 0;
+		unsigned int min_q = window * quality;
+		size_t i = lLast;
+		unsigned int zeros = 0;
+		for (; i >= Length() - window; --i) 		{
+			if (quality_[i] < 2 && UppercaseBase(i) != 'N')
+				++zeros;
+			q += quality_[i];
+		}
+		for (; i >= start_pos; --i) {
+			if (q >= min_q)
+				break;
+			if (quality_[i] < 2 && UppercaseBase(i) != 'N')
+				++zeros;
+			if (quality_[i + window] < 2 && UppercaseBase(i + window) != 'N')
+				--zeros;
+			if (zeros > (window >> 1)) // Quality data may not be set at all
+				break;
+			q += quality_[i] - quality_[i + window];
+		}
+		i += window;
+		for (; i >= start_pos; --i) {
+			if (quality_[i] < 2 && UppercaseBase(i) != 'N')
+				break;
+			if ((int)quality_[i] >= quality)
+				break;
+		}
+		if (i < lLast || quality_[lLast] > 1)
+			return i + 1;
+	}
+	else if (Length() > 0) {
+		size_t i;
+		for (i = Length() - 1; i >= start_pos; --i) {
+			if (quality_[i] < 2 && UppercaseBase(i) != 'N')
+				break;
+			if ((int)quality_[i] >= quality)
+				break;
+		}
+		if (i < lLast || quality_[lLast] > 1)
+			return i + 1;
+	}
+	return -1;
+}

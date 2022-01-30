@@ -168,9 +168,9 @@ public:
 
 	bool IsRedundant(size_t pos) const;
 
-	size_t ComputeQualityStart(int window, int quality) const;
+	size_t ComputeQualityStart(unsigned int window, int quality) const;
 
-	size_t ComputeQualityEnd(size_t start_pos, int window, int quality) const;
+	size_t ComputeQualityEnd(size_t start_pos, unsigned int window, int quality) const;
 
 private:
 
