@@ -44,9 +44,14 @@ std::array<uint8_t, 256> LookupTables::char_index;
 std::array<uint8_t, 256> LookupTables::iupac_index;
 std::array<char, 256> LookupTables::complement;
 std::array<uint8_t, 256> LookupTables::base_flags;
+std::array<uint32_t, LookupTables::CHAR_UNKNOWN + 1> LookupTables::amino_acid_redundant_matrix;
 
 void LookupTables::Initialize()
 {
+	const std::array<const std::string, 15> aa_iupac_codes_ = {
+		"B:DN",
+		"X:ACDEFGHIKLMNPQRSTVWY",
+		"Z:EQ"
 	};
 	const std::string bases = "TCAG";
 
@@ -88,4 +93,17 @@ void LookupTables::Initialize()
 	base_flags[(unsigned char)'u'] = base_flags[(unsigned char)'T'];
 	iupac_index['U'] = iupac_index['T'];
 	iupac_index['u'] = iupac_index['T'];
+
+	for (size_t i = 0; i < amino_acid_redundant_matrix.size(); ++i)
+		amino_acid_redundant_matrix[i] = (1u << i);
+	for (size_t i = 0; i < aa_iupac_codes_.size(); ++i) {
+		auto& str = aa_iupac_codes_[i];
+		uint32_t flags = 0;
+		for (auto it = str.cbegin() + 2; it != str.cend(); ++it) {
+			flags |= 1u << CharIndex(*it);
+		}
+		size_t aa_index = CharIndex(str[0]);
+		amino_acid_redundant_matrix[aa_index] |= flags;
+	}
+	amino_acid_redundant_matrix[CHAR_UNKNOWN] = 0;
 }

@@ -57,7 +57,14 @@ public:
 		return base_flags[(unsigned char)complement[(unsigned char)base]];
 	}
 
-	static inline bool BaseMatch(char base, char query) { return (BaseFlags(base) & BaseFlags(query)) == BaseFlags(base); }
+	static inline bool BaseMatch(char base, char query) {
+		return (BaseFlags(base) & BaseFlags(query)) == BaseFlags(base);
+	}
+
+	static inline bool AminoAcidMatch(char base, char query) {
+		// CharIndex() can't handle the stop codon '*' so test identity too.
+		return base == query || (amino_acid_redundant_matrix[CharIndex(base)] & (1u << CharIndex(query))) != 0;
+	}
 
 private:
 	static class static_initializer
@@ -75,5 +82,6 @@ private:
 	static std::array<uint8_t, 256> iupac_index;
 	static std::array<char, 256> complement;
 	static std::array<uint8_t, 256> base_flags;
+	static std::array<uint32_t, CHAR_UNKNOWN + 1> amino_acid_redundant_matrix;
 };
 
